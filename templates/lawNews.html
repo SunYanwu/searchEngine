@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="shortcut icon" type="image/x-icon"
+        href="https://static.codepen.io/assets/favicon/favicon-8ea04875e70c4b0bb41da869e81236e54394d63638a1ef12fa558a4a835f1164.ico" />
+    <link rel="mask-icon" type=""
+        href="https://static.codepen.io/assets/favicon/logo-pin-f2d2b6d2c61838f7e76325261b7195c27224080bc099486ddd6dccb469b8e8e6.svg"
+        color="#111" />
+    <title>Legal search engine</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <style>
+        @import url(https://fonts.googleapis.com/css?family=Open+Sans);
+
+        body {
+            background-image: radial-gradient( circle 592px at 88.2% 50%,
+            rgba(255,255,249,0.6) 0%, rgba(160,199,254,1) 64.6% );
+
+            font-family: 'Open Sans', sans-serif;
+        }
+
+        .search {
+            width: 100%;
+            position: relative;
+            display: flex;
+        }
+
+        .searchTerm {
+            width: 100%;
+            border: 3px solid #00B4CC;
+            border-right: none;
+            padding: 5px;
+            height: 20px;
+            border-radius: 5px 0 0 5px;
+            outline: none;
+            color: #9DBFAF;
+        }
+
+        .searchTerm:focus {
+            color: #00B4CC;
+        }
+
+        .searchButton {
+            width: 40px;
+            height: 36px;
+            border: 1px solid #00B4CC;
+            background: #00B4CC;
+            text-align: center;
+            color: #fff;
+            border-radius: 0 5px 5px 0;
+            cursor: pointer;
+            font-size: 20px;
+        }
+
+        div#doc {
+            width: 800px
+        }
+
+        /*Resize the wrap to see the search bar change!*/
+        .wrap {
+            width: 30%;
+            position: absolute;
+            top: 15%;
+            left: 18%;
+            transform: translate(-50%, -50%);
+
+        }
+        .title {
+            width: 30%;
+            position:relative;
+            top: 10px;
+            left: 18%;
+            transform: translate(-50%, -50%);
+            font-family: 'Open Sans', sans-serif;
+        }
+        .noContent{
+            position: center;
+        }
+    </style>
+    <script>
+        window.console = window.console || function (t) {};
+    </script>
+    <script>
+        if (document.location.search.match(/type=embed/gi)) {
+            window.parent.postMessage("resize", "*");
+        }
+    </script>
+</head>
+
+<body translate="no">
+    <h1 class="title">Legal Search Engine</h1>
+    <div class="wrap">
+        <form action="/search/" method="POST">
+            <div class="search">
+                {% if key %}
+                    <input type="text" class="searchTerm" placeholder="请输入和法律相关的搜索内容" name="key_word" value={{ key }}>
+                {% else %}
+                    <input type="text" class="searchTerm" placeholder="请输入和法律相关的搜索内容" name="key_word">
+                {% endif %}
+                <button type="submit" class="searchButton">
+                    <i class="fa fa-search"></i>
+                </button>
+            </div>
+        </form>
+    </div>
+    <br/>
+    <br/>
+    {% if error%}
+    {% for doc in docs%}
+    <div id="doc">
+{#        <hr style="height:3px;border:none;border-top:3px double red;" />#}
+        <hr style="height:1px;border:none;border-top:1px solid #555555;" />
+        <ul id="navigation">
+            <p><a href={{ doc.url }} target="_blank">{{doc.title}}</a></p>
+            <p>{{doc.snipper}}</p>
+            <a href="{{ doc.url }}" target="_blank">{{doc.url}}</a>
+            </p>
+        </ul>
+    </div>
+    <br />
+    {% endfor %}
+        <ul>
+            {% for i in range(1,page) %}
+                <a href="/search/page/{{i}}/">{{i}}</a>&nbsp;
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p class="noContent">对不起，没有您搜索的网页！</p>
+    {% endif %}
+    <script
+        src="https://static.codepen.io/assets/editor/live/css_reload-5619dc0905a68b2e6298901de54f73cefe4e079f65a75406858d92924b4938bf.js">
+    </script>
+</body>
+
+</html>
